@@ -4,7 +4,7 @@ autocmd BufRead,BufNewFile */.kube/config set filetype=yaml
 autocmd BufRead,BufNewFile */templates/*.yaml,*/templates/*.tpl set filetype=yaml.gotexttmpl
 
 " Detect kubectl get X -oyaml | vim (no file)
-function DetectKubernetes() abort
+function! DetectKubernetes() abort
   let g:is_kubernetes = v:false
   if did_filetype() || &ft != ''
     return
