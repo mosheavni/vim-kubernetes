@@ -26,6 +26,12 @@ spec:
 				- containerPort: 8080
 endsnippet
 
+snippet selm "Selector MatchLabels" !b
+selector:
+	matchLabels:
+		$0
+endsnippet
+
 snippet svc "Service" !b
 apiVersion: v1
 kind: Service
@@ -324,23 +330,24 @@ valueFrom:
 endsnippet
 
 snippet cert "cert-manager certificate" !b
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
 	name: ${1:name}
 	namespace: ${2:namespace}
 spec:
 	secretName: ${4:$3.tls}
+	isCA: false
+	duration: 2160h # 90d
+	renewBefore: 360h # 15d
+	# subject:
+	# 	organizations:
+	# 	- cluster.local
 	dnsNames:
 	- ${3:some.domain.com}
-	acme:
-		config:
-		- dns01:
-				provider: ${4:prod}
-			domains: [ $3 ]
 	issuerRef:
 		name: ${5:letsencrypt}
-		kind: ClusterIssuer
+		kind: ${6:ClusterIssuer}
 endsnippet
 
 
@@ -458,11 +465,7 @@ endsnippet
 
 snippet cmtls "cert-manager tls annotations" !b
 ${2:annotations:
-<<<<<<< Updated upstream
-	}certmanager.k8s.io/cluster-issuer: ${1:lets-encrypt}
-=======
 	}cert-manager.io/cluster-issuer: ${1:lets-encrypt}
->>>>>>> Stashed changes
 endsnippet
 
 snippet edns "external dns" !b
@@ -568,6 +571,10 @@ annotations:
 	prometheus.io/port: "${2:8080}"
 endsnippet
 
+snippet ingn "nginx ingress class annotation" !b
+kubernetes.io/ingress.class: nginx
+endsnippet
+
 snippet aff "Affinitiy/Anti-Affinity" !b
 pod${1:Anti}Affinity:
 	${2:preferred|required}DuringSchedulingIgnoredDuringExecution:
@@ -631,5 +638,13 @@ spec:
 					limits:
 						cpu: 100m
 						memory: 100Mi
+$0
+endsnippet
+
+snippet tol "Toleration" !b
+- key: ${1:kubernetes.azure.com/scalesetpriority}
+	operator: ${2:Equal}
+	value: ${3:spot}
+	effect: ${4:NoSchedule}
 $0
 endsnippet
