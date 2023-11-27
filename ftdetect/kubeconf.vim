@@ -2,7 +2,7 @@
 autocmd BufRead,BufNewFile */.kube/config set filetype=yaml
 
 " Detect kubectl get X -oyaml | vim (no file)
-function! DetectKubernetes() abort
+function! s:DetectKubernetes() abort
   let g:is_kubernetes = v:false
   if did_filetype() || &ft != ''
     return
@@ -16,6 +16,4 @@ function! DetectKubernetes() abort
   endif
   return g:is_kubernetes
 endfunction
-augroup filetypedetect
-  autocmd BufNewFile,BufRead,BufEnter * call DetectKubernetes()
-augroup END
+autocmd BufNewFile,BufRead,BufEnter * call s:DetectKubernetes()
