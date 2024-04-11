@@ -1,3 +1,6 @@
+if did_filetype()
+  finish
+endif
 " Set filetype for ~/.kube/config
 autocmd BufRead,BufNewFile */.kube/config set filetype=yaml
 
@@ -16,4 +19,4 @@ function! s:DetectKubernetes() abort
   endif
   return g:is_kubernetes
 endfunction
-autocmd BufNewFile,BufRead,BufEnter * call s:DetectKubernetes()
+" autocmd BufNewFile,BufRead,BufEnter * call s:DetectKubernetes()
